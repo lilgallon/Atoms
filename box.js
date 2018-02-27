@@ -1,3 +1,5 @@
+//  TODO: SOMETIMES THERE ISN'T 5 ATOMS BUT 4!!
+
 /**
  * Size of the grid
  * @type {number}
@@ -181,9 +183,6 @@ function handleGrayClick(clicked_cell){
     }
 
 }
-
-
-//  TODO: SOMETIMES THERE ISN'T 5 ATOMS BUT 4!!
 
 /**
  * Recursive function that returns a cell or null.
