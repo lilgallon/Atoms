@@ -1,10 +1,20 @@
-//  TODO: SOMETIMES THERE ISN'T 5 ATOMS BUT 4!!
-
 /**
  * Size of the grid
  * @type {number}
  */
-var size = 10;
+const size = 10;
+
+/**
+ * Number of cell selected by the user (graphically identified as rounds)
+ * @type {number}
+ */
+var rounds = 0;
+
+/**
+ * Number of atoms in the grid
+ * @type {number}
+ */
+const atoms = 5;
 
 /**
  * Score of the user
@@ -26,7 +36,7 @@ function universeCreation(){
     for(li = 0; li < size ; li += 1){
         ligne = [];
         for(co = 0; co < size; co += 1){
-            ligne.push(new cell(li,co));
+            ligne.push(cell(li,co));
         }
         universe.push(ligne);
     }
@@ -36,21 +46,21 @@ function universeCreation(){
  * Initialisation of the atoms in the universe
  */
 function atomsInit(){
-    var atoms_nb = 5;
     var available_lines = [];
     var available_columns = [];
+    var i;
 
-    for(var i = 1 ; i < size-1 ; ++i){
+    for(i = 1 ; i < size-1 ; ++i){
         available_lines.push(i);
         available_columns.push(i);
     }
 
-    for(var i = 1 ; i <= atoms_nb ; ++i) {
+    for(i = 1 ; i <= atoms ; ++i) {
         var li = available_lines[Math.floor(Math.random() * available_lines.length)];
         var co = available_columns[Math.floor(Math.random() * available_columns.length)];
         universe[li][co].atom = true;
-        available_lines.slice(li, 1);
-        available_columns.slice(co, 1);
+        available_lines.splice(available_lines.indexOf( li ), 1);
+        available_columns.splice(available_columns.indexOf(co ), 1);
     }
 }
 
@@ -90,7 +100,6 @@ function gridCreation(){
 function cell(line, column){
     this.li = line;
     this.co = column;
-    this.state = -1;
     this.atom = false;
     this.dom = null;
     var instance = this;
@@ -126,16 +135,21 @@ function cell(line, column){
 function handleWhiteClick(clicked_cell){
 
     if(clicked_cell.round == null) {
-        clicked_cell.round = window.document.createElement("b");
-        clicked_cell.round.style.display = "block";
-        clicked_cell.round.style.width = "25px";
-        clicked_cell.round.style.height = "25px";
-        clicked_cell.round.style.backgroundColor = "black";
-        clicked_cell.round.style.borderRadius = "50%";
-        clicked_cell.dom.appendChild(clicked_cell.round);
+        // If there is less rounds than atom, it is possible to add a round
+        if(rounds < atoms){
+            clicked_cell.round = window.document.createElement("b");
+            clicked_cell.round.style.display = "block";
+            clicked_cell.round.style.width = "25px";
+            clicked_cell.round.style.height = "25px";
+            clicked_cell.round.style.backgroundColor = "black";
+            clicked_cell.round.style.borderRadius = "50%";
+            clicked_cell.dom.appendChild(clicked_cell.round);
+            rounds ++;
+        }
     }else{
         clicked_cell.dom.removeChild(clicked_cell.round);
         clicked_cell.round = null;
+        rounds --;
     }
 }
 
@@ -255,10 +269,19 @@ function shootResult (cell, line_increment, column_increment) {
 }
 
 /**
+ * TODO
+ */
+function onValidateClick(){
+    // TODO
+    // verification atomes <=> cases selectionnées
+}
+
+/**
  * Sort of main ;)
  */
 function init() {
     universeCreation();
     atomsInit();
     gridCreation();
+    window.document.getElementById("validate").onclick = onValidateClick;
 }
