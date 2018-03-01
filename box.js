@@ -1,4 +1,9 @@
 /**
+ * Identifies if the program is in debug mode
+ */
+var debug_mode;
+
+/**
  * Size of the grid
  * @type {number}
  */
@@ -8,7 +13,7 @@ const size = 10;
  * Number of cell selected by the user (graphically identified as rounds)
  * @type {number}
  */
-var rounds = 0;
+var rounds;
 
 /**
  * Number of atoms in the grid
@@ -20,25 +25,26 @@ const atoms = 5;
  * Score of the user
  * @type {number}
  */
-var score = 0;
+var score;
 
 /**
  * Universe (actually an array that is storing all the cells)
  * @type {Array}
  */
-var universe = [];
+var universe;
 
 /**
  * Creation of the universe ^.^
  */
 function universeCreation(){
-    var li, co, ligne;
+    universe = [];
+    var li, co, line;
     for(li = 0; li < size ; li += 1){
-        ligne = [];
+        line = [];
         for(co = 0; co < size; co += 1){
-            ligne.push(cell(li,co));
+            line.push(new Cell(li,co));
         }
-        universe.push(ligne);
+        universe.push(line);
     }
 }
 
@@ -68,6 +74,9 @@ function atomsInit(){
  * Creation of the html grid according to the universe
  */
 function gridCreation(){
+    rounds = 0;
+    score = 0;
+    debug_mode = false;
     var d = window.document;
     var table = d.createElement("table");
     table.style.border = "2px solid black";
@@ -80,9 +89,6 @@ function gridCreation(){
             var cell = universe[i][j];
             cell.dom = td;
             cell.initialize();
-            if(cell.atom){
-                cell.dom.style.backgroundColor = "red";
-            }
             td.style.width = "25px";
             td.style.height = "25px";
             td.style.border = "1px solid black";
@@ -97,11 +103,12 @@ function gridCreation(){
  * @param line
  * @param column
  */
-function cell(line, column){
+function Cell(line, column){
     this.li = line;
     this.co = column;
     this.atom = false;
     this.dom = null;
+    this.validated_round = false;
     var instance = this;
     this.grid = (this.li > 0) && (this.li < size-1) && (this.co > 0) && (this.co < size-1);
     this.round = null;
@@ -146,7 +153,7 @@ function handleWhiteClick(clicked_cell){
             clicked_cell.dom.appendChild(clicked_cell.round);
             rounds ++;
         }
-    }else{
+    }else if(!clicked_cell.validated_round){
         clicked_cell.dom.removeChild(clicked_cell.round);
         clicked_cell.round = null;
         rounds --;
@@ -168,7 +175,7 @@ function handleGrayClick(clicked_cell){
 
     // 1 -> change the color of the selected cell
     clicked_cell.dom.style.backgroundColor = "blue";
-    score += 1;
+    updateScore(1);
 
     // 2 -> determine the increments to use
     var line_increment = 0;
@@ -192,7 +199,7 @@ function handleGrayClick(clicked_cell){
 
         // Different ending cell means that the laser finished in a different cell, so the score increments of 1
         if(result_cell !== clicked_cell){
-            score += 1;
+            updateScore(1);
         }
     }
 
@@ -269,19 +276,109 @@ function shootResult (cell, line_increment, column_increment) {
 }
 
 /**
- * TODO
+ * Updates the score, and updates the html container
+ * @param increment
+ */
+function updateScore(increment){
+    score += increment;
+    document.getElementById("score").innerHTML = score.toString();
+}
+
+/**
+ * Checks if the user placed his rounds at the right place !
+ * => score + 5 if it is false
  */
 function onValidateClick(){
-    // TODO
-    // verification atomes <=> cases selectionnées
+    if(rounds === atoms){
+        var rounds_list = getRounds();
+
+        if(rounds_list.length !== atoms){
+            throw "getRounds() method must be messing around...";
+        }
+
+        var success_count = 0;
+        for(var i = 0 ; i < rounds_list.length ; ++ i){
+            if(rounds_list[i].atom){
+                success_count ++;
+                // If it is the true placement, then the user won't be able to remove the round
+                rounds_list[i].validated_round = true;
+            }else{
+                // If the round is wrongly placed, then we remove it
+                // PS: Using handleWhiteClick prevent us from updating the view
+                handleWhiteClick(rounds_list[i]);
+            }
+        }
+
+        console.log(success_count);
+
+        if(success_count === atoms){
+            // The user finished the game
+
+            // Update the history
+            var history = document.getElementById("history");
+            var li = document.createElement("li");
+            var date = new Date();
+            li.innerHTML = "Date : " + date.toLocaleTimeString() + ", score : " + score.toString();
+            history.appendChild(li);
+
+            // Reset the game
+            // Fast way of getting rid of children
+            var game = document.getElementById("game");
+            while (game.firstChild) {
+                game.removeChild(game.firstChild);
+            }
+            universeCreation();
+            atomsInit();
+            gridCreation();
+            updateScore(0);
+        }else {
+            updateScore((atoms - success_count) * 5);
+        }
+    }
+}
+
+function onDebugClick(){
+    debug_mode = !debug_mode;
+    for(var li = 1 ; li < size - 1 ; ++ li){
+        for(var co = 1; co < size -1 ; ++ co){
+            if(universe[li][co].atom){
+                if(debug_mode){
+                    universe[li][co].dom.style.backgroundColor = "red";
+                }else{
+                    universe[li][co].dom.style.backgroundColor = "white";
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Find all the rounds placed and returns the array containing all the cells that have rounds.
+ * @returns {Array}
+ */
+function getRounds(){
+    var rounds_list = [];
+    for(var li = 1 ; li < size - 1 ; ++ li){
+        for(var co = 1; co < size -1 ; ++ co){
+            if(universe[li][co].round != null){
+                rounds_list.push(universe[li][co]);
+            }
+        }
+    }
+    return rounds_list;
 }
 
 /**
  * Sort of main ;)
+ * Pro TIP: if you find that your javascript file isn't loaded by the browser, but an other one is,
+ * it may be because your javascript file is cached. To work around, you can put a new NUMBER in this :
+ * <script src="box.js?NUMBER" type="application/javascript"></script>
  */
 function init() {
     universeCreation();
     atomsInit();
     gridCreation();
-    window.document.getElementById("validate").onclick = onValidateClick;
+    document.getElementById("validate").onclick = onValidateClick;
+    document.getElementById("debug").onclick = onDebugClick;
+    updateScore(0);
 }
