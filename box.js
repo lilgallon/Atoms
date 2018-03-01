@@ -79,6 +79,7 @@ function gridCreation(){
     debug_mode = false;
     var d = window.document;
     var table = d.createElement("table");
+    table.style.margin = "0 auto";
     table.style.border = "2px solid black";
     table.style.borderCollapse = "collapse";
     for(var i = 0; i<size; ++i){
