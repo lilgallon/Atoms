@@ -93,6 +93,7 @@ function gridCreation(){
             td.style.width = "25px";
             td.style.height = "25px";
             td.style.border = "1px solid black";
+            td.style.textAlign = "center";
             tr.appendChild(td);
         }
     }
@@ -318,8 +319,6 @@ function onValidateClick(){
             }
         }
 
-        console.log(success_count);
-
         if(success_count === atoms){
             // The user finished the game
 
@@ -346,15 +345,21 @@ function onValidateClick(){
     }
 }
 
+/**
+ * Permits to the user to know where the atoms are.
+ * Those atoms are identified with a "X". It is more "user-friendly"
+ * to do this this way since the path of the laser is already using
+ * background color.
+ */
 function onDebugClick(){
     debug_mode = !debug_mode;
     for(var li = 1 ; li < size - 1 ; ++ li){
         for(var co = 1; co < size -1 ; ++ co){
             if(universe[li][co].atom){
                 if(debug_mode){
-                    universe[li][co].dom.style.backgroundColor = "red";
+                    universe[li][co].dom.innerHTML = "<b>X</b>";
                 }else{
-                    universe[li][co].dom.style.backgroundColor = "white";
+                    universe[li][co].dom.innerHTML = "";
                 }
             }
         }
