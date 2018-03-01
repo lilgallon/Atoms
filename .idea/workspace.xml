@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5d7101e-eff8-4a70-8338-d0652d6ae367" name="Default" comment="added visuals">
+    <list default="true" id="c5d7101e-eff8-4a70-8338-d0652d6ae367" name="Default" comment="improved debug mode by using text instead of conflicting with the path by using background color">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/box.js" afterPath="$PROJECT_DIR$/box.js" />
       <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="20" column="12" lean-forward="true" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+            <state relative-caret-position="80">
+              <caret line="5" column="23" lean-forward="true" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
               <folding>
                 <element signature="n#style#0;n#header#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -204,7 +203,7 @@
       <workItem from="1519910827052" duration="101000" />
       <workItem from="1519910939040" duration="2034000" />
       <workItem from="1519912994376" duration="4417000" />
-      <workItem from="1519917639561" duration="270000" />
+      <workItem from="1519917639561" duration="477000" />
     </task>
     <task id="LOCAL-00001" summary="Ajout univers / placement atomes &amp; fix random float -&gt; int">
       <created>1519753393438</created>
@@ -255,11 +254,18 @@
       <option name="project" value="LOCAL" />
       <updated>1519917402143</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="improved debug mode by using text instead of conflicting with the path by using background color">
+      <created>1519918103861</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1519918103861</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28826000" />
+    <option name="totallyTimeSpent" value="29033000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -309,7 +315,8 @@
     <MESSAGE value="added user interaction, history, debug mode and fixed cell creation from last commit (game working)" />
     <MESSAGE value="improved presentation" />
     <MESSAGE value="added visuals" />
-    <option name="LAST_COMMIT_MESSAGE" value="added visuals" />
+    <MESSAGE value="improved debug mode by using text instead of conflicting with the path by using background color" />
+    <option name="LAST_COMMIT_MESSAGE" value="improved debug mode by using text instead of conflicting with the path by using background color" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -518,8 +525,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="20" column="12" lean-forward="true" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+        <state relative-caret-position="80">
+          <caret line="5" column="23" lean-forward="true" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
           <folding>
             <element signature="n#style#0;n#header#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
