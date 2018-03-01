@@ -175,7 +175,7 @@ function handleWhiteClick(clicked_cell){
 function handleGrayClick(clicked_cell){
 
     // 1 -> change the color of the selected cell
-    clicked_cell.dom.style.backgroundColor = "blue";
+    clicked_cell.dom.style.backgroundColor = "#31B404";
     updateScore(1);
 
     // 2 -> determine the increments to use
@@ -196,7 +196,7 @@ function handleGrayClick(clicked_cell){
 
     // 4 -> change the color of the result cell
     if(result_cell != null){
-        result_cell.dom.style.backgroundColor = "aqua";
+        result_cell.dom.style.backgroundColor = "#B40404";
 
         // Different ending cell means that the laser finished in a different cell, so the score increments of 1
         if(result_cell !== clicked_cell){
@@ -218,6 +218,11 @@ function handleGrayClick(clicked_cell){
 function shootResult (cell, line_increment, column_increment) {
     var next_cell = universe[cell.li + line_increment][cell.co + column_increment];
 
+    if(cell.dom.style.backgroundColor !== "rgb(49, 180, 4)"){ // rgb(49, 180, 4) means #31B404 (green) !!
+
+        cell.dom.style.backgroundColor = "#FF8000";
+    }
+
     // The next cell is out of the grid - so we are in a gray cell
     if (!next_cell.grid) {
         return next_cell;
@@ -225,6 +230,7 @@ function shootResult (cell, line_increment, column_increment) {
 
     // If there is an atom in the next cell
     if (next_cell.atom) {
+        cell.dom.style.backgroundColor = "#B40404";
         return null; // Absorption
     }
 
@@ -233,6 +239,7 @@ function shootResult (cell, line_increment, column_increment) {
 
         // Case if an atom is next to the next_cell -> so we turn around and go back  (only happens on the start, so we are already on a gray cell)
         if(universe[next_cell.li][next_cell.co - 1].atom || universe[next_cell.li][next_cell.co + 1].atom){
+            cell.dom.style.backgroundColor = "#B40404";
             return cell;
         }
 
@@ -255,6 +262,7 @@ function shootResult (cell, line_increment, column_increment) {
     {
         // Case if an atom is next to the next_cell -> so we turn around and go back (only happens on the start, so we are already on a gray cell)
         if(universe[next_cell.li - 1][next_cell.co].atom || universe[next_cell.li + 1][next_cell.co].atom){
+            cell.dom.style.backgroundColor = "#B40404";
             return cell;
         }
 
