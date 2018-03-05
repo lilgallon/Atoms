@@ -1,7 +1,27 @@
 /**
  * Identifies if the program is in debug mode
+ * @type {boolean}
  */
 var debug_mode;
+
+/**
+ * It says whenever or not the user has used the debug mode while playing
+ * @type {boolean}
+ */
+var debug_was_used;
+
+/**
+ * It says whenever or not the user has set the difficulty to easy while playing
+ * @type {boolean}
+ */
+var difficulty_has_been_easy;
+
+/**
+ * Difficulty of the game (0 = easy, 1 = hard)
+ * @type {number}
+ */
+var difficulty;
+
 
 /**
  * Size of the grid
@@ -77,6 +97,9 @@ function gridCreation(){
     rounds = 0;
     score = 0;
     debug_mode = false;
+    debug_was_used = false;
+    difficulty_has_been_easy = false;
+    updateDifficulty(1);
     var d = window.document;
     var table = d.createElement("table");
     table.style.margin = "0 auto";
@@ -98,6 +121,26 @@ function gridCreation(){
         }
     }
     d.getElementById("game").appendChild(table);
+}
+
+/**
+ * Updates the difficulty label & level
+ */
+function updateDifficulty(dif){
+    var label = "";
+    difficulty = dif;
+    switch (difficulty){
+        case 0:
+            label = "easy";
+            break;
+        case 1:
+            label = "hard";
+            break;
+        default:
+            label = "should not happen";
+            break;
+    }
+    window.document.getElementById("difficulty_label").innerHTML = label;
 }
 
 /**
@@ -175,6 +218,11 @@ function handleWhiteClick(clicked_cell){
  */
 function handleGrayClick(clicked_cell){
 
+    // 0 -> if the difficulty level is at its minimum, then the user does not have the difficulty bonus
+    if(difficulty === 0){
+        difficulty_has_been_easy = true;
+    }
+
     // 1 -> change the color of the selected cell
     clicked_cell.dom.style.backgroundColor = "#31B404";
     updateScore(1);
@@ -220,8 +268,10 @@ function shootResult (cell, line_increment, column_increment) {
     var next_cell = universe[cell.li + line_increment][cell.co + column_increment];
 
     if(cell.dom.style.backgroundColor !== "rgb(49, 180, 4)"){ // rgb(49, 180, 4) means #31B404 (green) !!
-
-        cell.dom.style.backgroundColor = "#FF8000";
+        // If the difficulty is set to easy, we show the entire laser
+        if(difficulty === 0) {
+            cell.dom.style.backgroundColor = "#FF8000";
+        }
     }
 
     // The next cell is out of the grid - so we are in a gray cell
@@ -295,6 +345,28 @@ function updateScore(increment){
 }
 
 /**
+ * Permits to the user to know where the atoms are.
+ * Those atoms are identified with a "X". It is more "user-friendly"
+ * to do this this way since the path of the laser is already using
+ * background color.
+ */
+function onDebugClick(){
+    debug_was_used = true;
+    debug_mode = !debug_mode;
+    for(var li = 1 ; li < size - 1 ; ++ li){
+        for(var co = 1; co < size -1 ; ++ co){
+            if(universe[li][co].atom){
+                if(debug_mode){
+                    universe[li][co].dom.style.backgroundColor = "#ba7de0";
+                }else{
+                    universe[li][co].dom.style.backgroundColor = "";
+                }
+            }
+        }
+    }
+}
+
+/**
  * Checks if the user placed his rounds at the right place !
  * => score + 5 if it is false
  */
@@ -326,7 +398,11 @@ function onValidateClick(){
             var history = document.getElementById("history");
             var li = document.createElement("li");
             var date = new Date();
-            li.innerHTML = "Date : " + date.toLocaleTimeString() + ", score : " + score.toString();
+            var difficulty_label = "easy";
+            var used_debug = "no";
+            if(!difficulty_has_been_easy && difficulty === 1) difficulty_label = "hard";
+            if(debug_was_used) used_debug = "yes";
+            li.innerHTML = "Date : " + date.toLocaleTimeString() + ", score : " + score.toString() + ", difficulty : " + difficulty_label + ", debug mode was used : " + used_debug;
             history.appendChild(li);
 
             // Reset the game
@@ -346,23 +422,13 @@ function onValidateClick(){
 }
 
 /**
- * Permits to the user to know where the atoms are.
- * Those atoms are identified with a "X". It is more "user-friendly"
- * to do this this way since the path of the laser is already using
- * background color.
+ * Updates the difficulty of the game when the user changes he difficulty
  */
-function onDebugClick(){
-    debug_mode = !debug_mode;
-    for(var li = 1 ; li < size - 1 ; ++ li){
-        for(var co = 1; co < size -1 ; ++ co){
-            if(universe[li][co].atom){
-                if(debug_mode){
-                    universe[li][co].dom.style.backgroundColor = "#ba7de0";
-                }else{
-                    universe[li][co].dom.style.backgroundColor = "";
-                }
-            }
-        }
+function onDifficultyClick(){
+    if(difficulty === 0){
+        updateDifficulty(1)
+    }else if(difficulty === 1){
+        updateDifficulty(0)
     }
 }
 
@@ -394,5 +460,6 @@ function init() {
     gridCreation();
     document.getElementById("validate").onclick = onValidateClick;
     document.getElementById("debug").onclick = onDebugClick;
+    document.getElementById("difficulty").onclick = onDifficultyClick;
     updateScore(0);
 }
