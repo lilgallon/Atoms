@@ -357,9 +357,9 @@ function onDebugClick(){
         for(var co = 1; co < size -1 ; ++ co){
             if(universe[li][co].atom){
                 if(debug_mode){
-                    universe[li][co].dom.innerHTML = "<b>X</b>";
+                    universe[li][co].dom.style.backgroundColor = "#ba7de0";
                 }else{
-                    universe[li][co].dom.innerHTML = "";
+                    universe[li][co].dom.style.backgroundColor = "";
                 }
             }
         }
