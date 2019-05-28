@@ -1,10 +1,3 @@
-**CTRL+R**:
-- <short description> -\> short description
-
-**Utility**:
-- https://choosealicense.com/
-- https://getemoji.com/
-
 # Atoms
 ![Latest release](https://img.shields.io/github/release/N3ROO/Atoms.svg)
 ![opissues](https://img.shields.io/github/issues/N3ROO/Atoms.svg) 
